@@ -1,0 +1,11 @@
+resolver: nightly-2025-11-19
+
+system-ghc: true
+
+nix:
+  enable: false
+
+packages:
+- cabal/WEditor
+- cabal/WEditorBrick
+# - cabal/WEditorHyphen
