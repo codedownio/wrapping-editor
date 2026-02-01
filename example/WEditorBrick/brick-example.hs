@@ -28,6 +28,7 @@ import System.IO
 import Brick.AttrMap
 import Brick.Main
 import Brick.Types
+import Control.Monad.State (get, put)
 import Graphics.Vty (defAttr)
 import Graphics.Vty.Input
 import WEditor.LineWrap             -- For the line-wrapping policy.
@@ -36,8 +37,12 @@ import WEditorBrick.WrappingEditor  -- For the wrapping editor Brick widget.
 
 -- Delegate most events to a single handler. If you get annoyed by scrolling
 -- past the last line, you can apply mapEditor viewerFillAction before continue.
-handleEventsWith _ x (VtyEvent (EvKey KEsc [])) = halt x
-handleEventsWith handler x (VtyEvent e) = continue =<< handler x e
+handleEventsWith _ (VtyEvent (EvKey KEsc [])) = halt
+handleEventsWith handler (VtyEvent e) = do
+  editor <- get
+  editor' <- handler editor e
+  put editor'
+handleEventsWith _ _ = return ()
 
 -- An app containing nothing but a single editor widget.
 app = App {
@@ -47,7 +52,7 @@ app = App {
   appChooseCursor = const listToMaybe,
   -- handleEditor handles editor events such as cursor movements and typing.
   appHandleEvent = handleEventsWith handleEditor,
-  appStartEvent = return,
+  appStartEvent = return (),
   appAttrMap = const (attrMap defAttr [])
 }
 

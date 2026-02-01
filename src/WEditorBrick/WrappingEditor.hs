@@ -99,7 +99,7 @@ renderEditor focus editor = doEditor view editor where
 --   Call this before any custom event-handling logic so that the viewport is
 --   the correct size. This will ensure that vertical cursor movements match
 --   what the user expects.
-updateEditorExtent :: Eq n => WrappingEditor c n -> (EventM n (WrappingEditor c n))
+updateEditorExtent :: Eq n => WrappingEditor c n -> (EventM n s (WrappingEditor c n))
 updateEditorExtent editor = do
   extent <- lookupExtent (getName editor)
   return $ mapEditor (resize extent) editor where
@@ -117,7 +117,7 @@ updateEditorExtent editor = do
 --
 --   To disable or override any of these keys, intercept them in the main
 --   handler for the 'App'.
-handleEditor :: Eq n => WrappingEditor Char n -> Event -> EventM n (WrappingEditor Char n)
+handleEditor :: Eq n => WrappingEditor Char n -> Event -> EventM n s (WrappingEditor Char n)
 handleEditor editor event = do
   updateEditorExtent editor >>= return . mapEditor action where
     action :: WrappingEditorAction Char

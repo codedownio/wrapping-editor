@@ -78,7 +78,7 @@ library WEditor-internal
                        Safe,
                        TypeFamilies
 
-  build-depends:       base >= 4.0 && < 4.14
+  build-depends:       base >= 4.0 && < 4.22
 
   default-language:    Haskell2010
 
